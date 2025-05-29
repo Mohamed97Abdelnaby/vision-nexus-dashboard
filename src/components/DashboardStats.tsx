@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Camera, ChartBar, Dashboard } from "lucide-react";
+import { Camera, ChartBar, LayoutDashboard, AlertTriangle } from "lucide-react";
 
 const stats = [
   {
@@ -15,7 +15,7 @@ const stats = [
     title: "Models Running",
     value: "47",
     change: "+5 this week",
-    icon: Dashboard,
+    icon: LayoutDashboard,
     color: "text-success-500",
     bgColor: "bg-success-500/10",
   },
@@ -31,7 +31,7 @@ const stats = [
     title: "Alerts Triggered",
     value: "3",
     change: "-2 from yesterday",
-    icon: Dashboard,
+    icon: AlertTriangle,
     color: "text-danger-500",
     bgColor: "bg-danger-500/10",
   },

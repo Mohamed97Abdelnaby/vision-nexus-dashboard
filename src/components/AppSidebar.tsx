@@ -11,14 +11,14 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { Camera, Dashboard, ChartBar, Settings } from "lucide-react";
+import { Camera, LayoutDashboard, ChartBar, Settings } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 
 const menuItems = [
   {
     title: "Dashboard",
     url: "/",
-    icon: Dashboard,
+    icon: LayoutDashboard,
   },
   {
     title: "Cameras",
