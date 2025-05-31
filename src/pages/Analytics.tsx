@@ -1,10 +1,11 @@
 
 import { AnalyticsChart } from "@/components/AnalyticsChart";
 import { DetailedAnalytics } from "@/components/DetailedAnalytics";
+import { AdvancedAnalytics } from "@/components/AdvancedAnalytics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChartBar, TrendingUp, Activity, BarChart3 } from "lucide-react";
+import { ChartBar, TrendingUp, Activity, BarChart3, Zap, Shield } from "lucide-react";
 
 export default function Analytics() {
   return (
@@ -30,10 +31,14 @@ export default function Analytics() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
             Overview
+          </TabsTrigger>
+          <TabsTrigger value="advanced" className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            Advanced
           </TabsTrigger>
           <TabsTrigger value="charts" className="flex items-center gap-2">
             <ChartBar className="w-4 h-4" />
@@ -51,6 +56,10 @@ export default function Analytics() {
 
         <TabsContent value="overview" className="space-y-6">
           <AnalyticsChart />
+        </TabsContent>
+
+        <TabsContent value="advanced" className="space-y-6">
+          <AdvancedAnalytics />
         </TabsContent>
 
         <TabsContent value="charts" className="space-y-6">
