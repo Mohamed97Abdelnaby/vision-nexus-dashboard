@@ -46,11 +46,6 @@ const items = [
     icon: Camera,
   },
   {
-    title: "Camera Feeds",
-    url: "/camera-feeds",
-    icon: Camera,
-  },
-  {
     title: "Analytics",
     url: "/analytics",
     icon: BarChart3,
