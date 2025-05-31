@@ -1,174 +1,205 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Settings as SettingsIcon } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
+import { 
+  Settings as SettingsIcon, 
+  Camera, 
+  Bell, 
+  Shield, 
+  Database, 
+  Wifi, 
+  User,
+  LogOut,
+  UserCog
+} from "lucide-react";
 
 export default function Settings() {
+  const { user, logout } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+    });
+    navigate("/auth");
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
+
   return (
     <div className="p-6 space-y-8 animate-fade-in">
       <div>
         <h1 className="text-3xl font-bold gradient-text mb-2">Settings</h1>
-        <p className="text-muted-foreground">Configure your system preferences</p>
+        <p className="text-muted-foreground">Configure your system preferences and account settings</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {/* Account Settings */}
         <Card className="glass-effect">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <SettingsIcon className="w-5 h-5" />
-              General Settings
+              <User className="w-5 h-5" />
+              Account
             </CardTitle>
+            <CardDescription>Manage your account and profile</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="system-name">System Name</Label>
-              <Input id="system-name" defaultValue="VisionHub Security System" />
+              <p className="text-sm font-medium">Signed in as:</p>
+              <p className="text-sm text-muted-foreground">{user?.email}</p>
+              <Badge variant="secondary">{user?.name}</Badge>
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="admin-email">Admin Email</Label>
-              <Input id="admin-email" type="email" defaultValue="admin@visionhub.com" />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="timezone">Timezone</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select timezone" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="utc">UTC</SelectItem>
-                  <SelectItem value="est">Eastern Standard Time</SelectItem>
-                  <SelectItem value="pst">Pacific Standard Time</SelectItem>
-                  <SelectItem value="cst">Central Standard Time</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex flex-col gap-2">
+              <Button variant="outline" onClick={handleProfileClick} className="w-full">
+                <UserCog className="w-4 h-4 mr-2" />
+                Edit Profile
+              </Button>
+              <Button variant="destructive" onClick={handleLogout} className="w-full">
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
             </div>
           </CardContent>
         </Card>
 
+        {/* Camera Settings */}
         <Card className="glass-effect">
           <CardHeader>
-            <CardTitle>Notification Settings</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Camera className="w-5 h-5" />
+              Camera Configuration
+            </CardTitle>
+            <CardDescription>Configure camera settings and preferences</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Email Alerts</Label>
-                <p className="text-sm text-muted-foreground">Receive email notifications for alerts</p>
-              </div>
-              <Switch defaultChecked />
+          <CardContent className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Auto-detection</span>
+              <Badge variant="default">Enabled</Badge>
             </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>SMS Notifications</Label>
-                <p className="text-sm text-muted-foreground">Receive SMS for critical alerts</p>
-              </div>
-              <Switch />
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Recording Quality</span>
+              <Badge variant="secondary">HD</Badge>
             </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Sound Alerts</Label>
-                <p className="text-sm text-muted-foreground">Play sound for new alerts</p>
-              </div>
-              <Switch defaultChecked />
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Night Vision</span>
+              <Badge variant="default">Enabled</Badge>
             </div>
+            <Button variant="outline" className="w-full">Configure Cameras</Button>
           </CardContent>
         </Card>
 
+        {/* Notifications */}
         <Card className="glass-effect">
           <CardHeader>
-            <CardTitle>Camera Defaults</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Bell className="w-5 h-5" />
+              Notifications
+            </CardTitle>
+            <CardDescription>Manage alert and notification preferences</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="default-resolution">Default Resolution</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select resolution" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="720p">720p HD</SelectItem>
-                  <SelectItem value="1080p">1080p Full HD</SelectItem>
-                  <SelectItem value="4k">4K Ultra HD</SelectItem>
-                </SelectContent>
-              </Select>
+          <CardContent className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Motion Alerts</span>
+              <Badge variant="default">Enabled</Badge>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="frame-rate">Frame Rate</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select frame rate" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="15">15 FPS</SelectItem>
-                  <SelectItem value="30">30 FPS</SelectItem>
-                  <SelectItem value="60">60 FPS</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">System Alerts</span>
+              <Badge variant="default">Enabled</Badge>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="recording-quality">Recording Quality</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select quality" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Email Notifications</span>
+              <Badge variant="secondary">Disabled</Badge>
             </div>
+            <Button variant="outline" className="w-full">Configure Notifications</Button>
           </CardContent>
         </Card>
 
+        {/* Security Settings */}
         <Card className="glass-effect">
           <CardHeader>
-            <CardTitle>AI Model Settings</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              Security
+            </CardTitle>
+            <CardDescription>Security and access control settings</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="detection-threshold">Detection Threshold</Label>
-              <Input id="detection-threshold" type="number" defaultValue="0.75" min="0" max="1" step="0.01" />
+          <CardContent className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Two-Factor Auth</span>
+              <Badge variant="secondary">Disabled</Badge>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="model-update">Auto-Update Models</Label>
-              <div className="flex items-center space-x-2">
-                <Switch defaultChecked />
-                <span className="text-sm text-muted-foreground">Automatically update to latest model versions</span>
-              </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Session Timeout</span>
+              <Badge variant="default">24h</Badge>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="batch-size">Processing Batch Size</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select batch size" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1 (Real-time)</SelectItem>
-                  <SelectItem value="4">4 (Balanced)</SelectItem>
-                  <SelectItem value="8">8 (Efficient)</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Login Attempts</span>
+              <Badge variant="default">5 max</Badge>
             </div>
+            <Button variant="outline" className="w-full">Security Settings</Button>
           </CardContent>
         </Card>
-      </div>
 
-      <div className="flex justify-end space-x-4">
-        <Button variant="outline">Reset to Defaults</Button>
-        <Button className="bg-tech-500 hover:bg-tech-600">Save Changes</Button>
+        {/* Storage Management */}
+        <Card className="glass-effect">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Database className="w-5 h-5" />
+              Storage
+            </CardTitle>
+            <CardDescription>Manage data storage and retention</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Used Storage</span>
+              <Badge variant="default">2.3 TB</Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Retention Period</span>
+              <Badge variant="secondary">30 days</Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Auto-cleanup</span>
+              <Badge variant="default">Enabled</Badge>
+            </div>
+            <Button variant="outline" className="w-full">Manage Storage</Button>
+          </CardContent>
+        </Card>
+
+        {/* Network Settings */}
+        <Card className="glass-effect">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Wifi className="w-5 h-5" />
+              Network
+            </CardTitle>
+            <CardDescription>Network and connectivity settings</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Connection Status</span>
+              <Badge variant="default">Online</Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Bandwidth Usage</span>
+              <Badge variant="secondary">Normal</Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Remote Access</span>
+              <Badge variant="default">Enabled</Badge>
+            </div>
+            <Button variant="outline" className="w-full">Network Settings</Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
