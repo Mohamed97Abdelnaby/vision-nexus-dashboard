@@ -2,8 +2,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Camera, Settings, Maximize, Play, Pause } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Camera, Maximize, Play, Pause, Plus, X } from "lucide-react";
 import { useState } from "react";
+
+const availableModels = [
+  { id: "person-detection", name: "Person Detection" },
+  { id: "vehicle-detection", name: "Vehicle Detection" },
+  { id: "license-plate", name: "License Plate Recognition" },
+  { id: "object-detection", name: "Object Detection" },
+  { id: "safety-monitoring", name: "Safety Monitoring" },
+  { id: "face-recognition", name: "Face Recognition" },
+  { id: "motion-detection", name: "Motion Detection" },
+  { id: "crowd-counting", name: "Crowd Counting" },
+];
 
 interface CameraFeedCardProps {
   camera: {
@@ -14,11 +26,12 @@ interface CameraFeedCardProps {
     models: string[];
     detections: number;
   };
-  onOpenSettings: (cameraId: number) => void;
+  onModelsUpdate: (cameraId: number, models: string[]) => void;
 }
 
-export function CameraFeedCard({ camera, onOpenSettings }: CameraFeedCardProps) {
+export function CameraFeedCard({ camera, onModelsUpdate }: CameraFeedCardProps) {
   const [isPlaying, setIsPlaying] = useState(true);
+  const [selectedModel, setSelectedModel] = useState<string>("");
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -30,6 +43,23 @@ export function CameraFeedCard({ camera, onOpenSettings }: CameraFeedCardProps) 
         return "bg-warning-500";
     }
   };
+
+  const handleAddModel = () => {
+    if (selectedModel && !camera.models.includes(selectedModel)) {
+      const newModels = [...camera.models, selectedModel];
+      onModelsUpdate(camera.id, newModels);
+      setSelectedModel("");
+    }
+  };
+
+  const handleRemoveModel = (modelToRemove: string) => {
+    const newModels = camera.models.filter(model => model !== modelToRemove);
+    onModelsUpdate(camera.id, newModels);
+  };
+
+  const availableToAdd = availableModels.filter(model => 
+    !camera.models.includes(model.name)
+  );
 
   return (
     <Card className="glass-effect hover-lift group">
@@ -88,37 +118,55 @@ export function CameraFeedCard({ camera, onOpenSettings }: CameraFeedCardProps) 
           </Badge>
         </div>
 
-        {/* Active Models */}
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Active Models:</span>
-            <span className="font-medium">{camera.models.length}</span>
+        {/* Model Management */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Select value={selectedModel} onValueChange={setSelectedModel}>
+              <SelectTrigger className="flex-1 h-8">
+                <SelectValue placeholder="Add AI Model..." />
+              </SelectTrigger>
+              <SelectContent>
+                {availableToAdd.map((model) => (
+                  <SelectItem key={model.id} value={model.name}>
+                    {model.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button 
+              size="sm" 
+              onClick={handleAddModel} 
+              disabled={!selectedModel}
+              className="h-8 w-8 p-0"
+            >
+              <Plus className="w-4 h-4" />
+            </Button>
           </div>
-          <div className="flex flex-wrap gap-1">
-            {camera.models.slice(0, 3).map((model, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                {model}
-              </Badge>
-            ))}
-            {camera.models.length > 3 && (
-              <Badge variant="outline" className="text-xs">
-                +{camera.models.length - 3} more
-              </Badge>
+
+          {/* Active Models */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Active Models:</span>
+              <span className="font-medium">{camera.models.length}</span>
+            </div>
+            {camera.models.length > 0 ? (
+              <div className="flex flex-wrap gap-1">
+                {camera.models.map((model, index) => (
+                  <Badge key={index} variant="outline" className="text-xs flex items-center gap-1">
+                    {model}
+                    <button
+                      onClick={() => handleRemoveModel(model)}
+                      className="ml-1 hover:bg-black/20 rounded"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground">No models active</p>
             )}
           </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-2 pt-2">
-          <Button
-            size="sm"
-            variant="outline"
-            className="flex-1"
-            onClick={() => onOpenSettings(camera.id)}
-          >
-            <Settings className="w-4 h-4 mr-1" />
-            Configure
-          </Button>
         </div>
       </CardContent>
     </Card>
