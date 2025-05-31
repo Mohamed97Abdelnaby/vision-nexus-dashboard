@@ -1,3 +1,4 @@
+
 import {
   LayoutDashboard,
   Camera,
@@ -6,7 +7,7 @@ import {
   Bell,
   HelpCircle,
   User,
-  Logout,
+  LogOut,
 } from "lucide-react"
 import { NavLink } from "react-router-dom"
 
@@ -19,10 +20,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { SidebarClose, SidebarOpen } from "@/components/ui/sidebar"
-import { useSidebar } from "@/components/ui/sidebar"
-import { cn } from "@/lib/utils"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar"
 
 // Menu items.
 const items = [
@@ -49,40 +58,40 @@ const items = [
 ]
 
 export function AppSidebar() {
-  const { isOpen } = useSidebar()
-
   return (
-    <aside
-      className={cn(
-        "border-r bg-secondary/50 flex-col fixed left-0 top-0 z-20 flex h-screen w-64 overflow-y-auto border-r transition-all duration-300 ease-in-out",
-        isOpen ? "translate-x-0" : "-translate-x-full",
-      )}
-    >
-      <div className="border-b p-4">
-        <h1 className="text-lg font-bold">VisionAI</h1>
-      </div>
+    <Sidebar>
+      <SidebarHeader>
+        <div className="p-4">
+          <h1 className="text-lg font-bold">VisionAI</h1>
+        </div>
+      </SidebarHeader>
 
-      <nav className="flex-1 space-y-1 p-4">
-        {items.map((item) => (
-          <NavLink
-            key={item.title}
-            to={item.url}
-            className={({ isActive }) =>
-              cn(
-                "group flex items-center space-x-2 rounded-md p-2 text-sm font-medium hover:underline",
-                isActive
-                  ? "bg-accent text-accent-foreground"
-                  : "text-muted-foreground",
-              )
-            }
-          >
-            <item.icon className="h-4 w-4" />
-            <span>{item.title}</span>
-          </NavLink>
-        ))}
-      </nav>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <NavLink
+                      to={item.url}
+                      className={({ isActive }) =>
+                        isActive ? "bg-accent text-accent-foreground" : ""
+                      }
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-      <div className="border-t p-4">
+      <SidebarFooter>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="flex h-8 w-full items-center justify-between rounded-md">
@@ -108,24 +117,12 @@ export function AppSidebar() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Logout className="mr-2 h-4 w-4" />
+              <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="absolute right-4 top-4 md:hidden">
-            <SidebarClose className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-full">
-          {/* Mobile sidebar content here */}
-        </SheetContent>
-      </Sheet>
-    </aside>
+      </SidebarFooter>
+    </Sidebar>
   )
 }
