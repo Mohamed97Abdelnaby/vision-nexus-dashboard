@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area, RadialBarChart, RadialBar } from "recharts";
 
@@ -204,7 +203,6 @@ export function AnalyticsChart() {
               data={systemMetrics}
             >
               <RadialBar
-                minAngle={15}
                 label={{ position: 'insideStart', fill: '#fff' }}
                 background
                 clockWise
