@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Camera } from "lucide-react";
+import { Camera, Settings } from "lucide-react";
 
 const cameras = [
   {
@@ -43,7 +43,11 @@ const cameras = [
   },
 ];
 
-export function CameraGrid() {
+interface CameraGridProps {
+  onOpenModelManager?: (cameraId: number) => void;
+}
+
+export function CameraGrid({ onOpenModelManager }: CameraGridProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "online":
@@ -106,7 +110,13 @@ export function CameraGrid() {
               <Button size="sm" className="flex-1">
                 View Feed
               </Button>
-              <Button size="sm" variant="outline" className="flex-1">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => onOpenModelManager?.(camera.id)}
+              >
+                <Settings className="w-4 h-4 mr-1" />
                 Configure
               </Button>
             </div>
